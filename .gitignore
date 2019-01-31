@@ -19,5 +19,19 @@
 *.tar.gz
 *.rar
 
+# Ignore target file with special suffix
+*.ipr
+*.iws
+*.iml
+*.class
+*.log
+
+# Ignore target directory.Don't ignore target files.
+out/
+.idea/
+target/
+logs/
+log/
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
