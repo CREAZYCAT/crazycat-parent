@@ -32,11 +32,12 @@ public class DefaultConvertManager implements ConvertManager {
     private String packagePath;
     private boolean hasFile = true;
 
-    public synchronized void register(Class source, Class target,String datePattern) {
+    public synchronized ConvertManager register(Class source, Class target,String datePattern) {
         String cacheKey = getCacheKey(source, target);
         if (null == cache.get(cacheKey)) {
             cache.putIfAbsent(cacheKey, initConvert(source, target,datePattern));
         }
+        return this;
     }
 
     private String getCacheKey(Class source, Class target) {
@@ -55,12 +56,13 @@ public class DefaultConvertManager implements ConvertManager {
     }
 
     @Override
-    public void setProcessor(ConvertProcessor... processor) {
+    public ConvertManager setProcessor(ConvertProcessor... processor) {
         this.processorChain.addAll(Arrays.asList(processor));
+        return this;
     }
 
-    public synchronized void register(Class self) {
-        register(self, self,null);
+    public synchronized ConvertManager register(Class self) {
+        return register(self, self,null);
     }
 
     public void setPackagePath(String packagePath) {
@@ -113,15 +115,17 @@ public class DefaultConvertManager implements ConvertManager {
     }
 
     @Override
-    public void setScanPackages(String... param) {
+    public ConvertManager setScanPackages(String... param) {
         scanPackages.addAll(Arrays.asList(param));
+        return this;
     }
 
     @Override
-    public void init() {
+    public ConvertManager init() {
         for(ConvertProcessor processor : processorChain){
             processor.execute(this);
         }
+        return this;
     }
 
     @Override

@@ -15,6 +15,9 @@ import top.crazycat.api.entity.DemoEntity;
 @Slf4j
 @Component("demoService")
 public class DemoServiceImpl implements DemoService {
+
+
+
     @Override
     public void request(DemoEntity entity) {
         log.info("request[{}]",entity);

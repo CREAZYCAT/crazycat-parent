@@ -2,9 +2,8 @@ package top.crazycat.convert.processor;
 
 import top.crazycat.convert.ConvertManager;
 import top.crazycat.convert.annotation.ConvertTo;
-import top.crazycat.convert.annotation.multipleSupport.ConvertTos;
-import top.crazycat.convert.util.ListUtil;
-import top.crazycat.convert.util.ReflectUtil;
+import top.crazycat.common.util.ListUtil;
+import top.crazycat.common.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;

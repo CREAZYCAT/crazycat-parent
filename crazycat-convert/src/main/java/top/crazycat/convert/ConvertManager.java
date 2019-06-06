@@ -12,11 +12,11 @@ public interface ConvertManager {
 
     ConvertProcessor[] processors();
 
-    void setProcessor(ConvertProcessor... processor);
+    ConvertManager setProcessor(ConvertProcessor... processor);
 
-    void register(Class source, Class target,String datePattern);
+    ConvertManager register(Class source, Class target,String datePattern);
 
-    void register(Class self);
+    ConvertManager register(Class self);
 
     <S, T> T convert(S source, Class<T> clazz);
 
@@ -24,9 +24,9 @@ public interface ConvertManager {
 
     String[] scanPackages();
 
-    void setScanPackages(String... param);
+    ConvertManager setScanPackages(String... param);
 
-    void init();
+    ConvertManager init();
 
     void destroy();
 

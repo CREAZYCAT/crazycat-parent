@@ -12,11 +12,16 @@
         <module>crazycat-api</module>
         <module>crazycat-service</module>
         <module>crazycat-convert</module>
+        <module>crazycat-common</module>
+        <module>crazycat-proxy</module>
     </modules>
     <packaging>pom</packaging>
 
     <properties>
         <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
+        <spring.version>5.1.4.RELEASE</spring.version>
+        <fastjson.version>1.2.47</fastjson.version>
+        <lombok.version>1.16.10</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -32,7 +37,17 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.10</version>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.crazycat</groupId>
@@ -44,7 +59,37 @@
                 <artifactId>crazycat-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>top.crazycat</groupId>
+                <artifactId>crazycat-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.crazycat</groupId>
+                <artifactId>crazycat-convert</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.crazycat</groupId>
+                <artifactId>crazycat-proxy</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <finalName>${artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

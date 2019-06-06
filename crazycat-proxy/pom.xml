@@ -9,18 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>crazycat-convert</artifactId>
+    <artifactId>crazycat-proxy</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>top.crazycat</groupId>
             <artifactId>crazycat-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.8.0.GA</version>
-        </dependency>
-
     </dependencies>
 </project>

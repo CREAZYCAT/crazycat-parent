@@ -1,4 +1,4 @@
-package top.crazycat.convert.util;
+package top.crazycat.common.util;
 
 import java.util.Collection;
 

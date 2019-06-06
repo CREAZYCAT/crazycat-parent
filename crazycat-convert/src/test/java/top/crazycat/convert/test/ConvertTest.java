@@ -3,12 +3,13 @@ package top.crazycat.convert.test;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import top.crazycat.convert.ConvertManager;
 import top.crazycat.convert.impl.DefaultConvertManager;
 import top.crazycat.convert.processor.RegisterProcessor;
 import top.crazycat.convert.test.entity.Demo2Entity;
 import top.crazycat.convert.test.entity.Demo3Entity;
 import top.crazycat.convert.test.entity.DemoEntity;
-import top.crazycat.convert.util.ReflectUtil;
+import top.crazycat.common.util.ReflectUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,10 +28,10 @@ public class ConvertTest {
     @Test
     public void test1() {
         long start = System.currentTimeMillis();
-        DefaultConvertManager manage = new DefaultConvertManager();
-        manage.setScanPackages("top.crazycat.convert.test.entity");
-        manage.setProcessor(new RegisterProcessor());
-        manage.init();
+        ConvertManager manage = new DefaultConvertManager()
+                                        .setScanPackages("top.crazycat.convert.test.entity")
+                                        .setProcessor(new RegisterProcessor())
+                                        .init();
         DemoEntity entity = new DemoEntity();
         entity.setCount(5);
         entity.setId(666L);
