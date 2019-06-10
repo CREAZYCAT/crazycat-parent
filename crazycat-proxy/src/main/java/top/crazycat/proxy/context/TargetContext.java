@@ -5,7 +5,7 @@ package top.crazycat.proxy.context;
  *
  * @author liyongbing
  * @date: 2019/6/6
- * description:
+ * description:目标上下文，区分不同环境的实例
  */
 public interface TargetContext {
 

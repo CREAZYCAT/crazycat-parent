@@ -17,6 +17,7 @@ import top.crazycat.proxy.annotation.Proxy;
 public class ProxyTest {
 
     @Proxy
+    @Autowired
     private DemoService demoService;
 
     public void test(){

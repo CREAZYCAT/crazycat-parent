@@ -14,7 +14,7 @@ public interface ProxyFactory {
 
     <T> T getProxy(Class<T> clazz);
 
-    <T> T getProxy(Class<T> clazz,T bean);
+    <T> T getProxy(Class<T> clazz,Object bean);
 
     ProxyType proxyType();
 

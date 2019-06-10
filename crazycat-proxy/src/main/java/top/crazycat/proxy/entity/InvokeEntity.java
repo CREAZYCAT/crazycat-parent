@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author liyongbing
  * @date: 2019/6/6
- * description:
+ * description:调用记录实体
  */
 @Data
 public class InvokeEntity implements Serializable {

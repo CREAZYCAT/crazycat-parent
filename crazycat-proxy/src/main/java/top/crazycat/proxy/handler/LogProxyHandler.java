@@ -13,7 +13,7 @@ import java.util.Arrays;
  *
  * @author liyongbing
  * @date: 2019/6/6
- * description:
+ * description:jdk代理handler
  */
 public class LogProxyHandler implements InvocationHandler {
 

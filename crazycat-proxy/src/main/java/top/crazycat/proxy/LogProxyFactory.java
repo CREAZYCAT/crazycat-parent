@@ -30,7 +30,7 @@ public class LogProxyFactory implements ProxyFactory {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getProxy(Class<T> clazz, T bean) {
+    public <T> T getProxy(Class<T> clazz, Object bean) {
         Objects.requireNonNull(bean, "no bean input");
         T proxy = (T) LOG_PROXY_STORE.get(clazz);
         if (null == proxy) {
@@ -46,7 +46,7 @@ public class LogProxyFactory implements ProxyFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T generatorLogProxy(Class<T> clazz, T bean) {
+    private <T> T generatorLogProxy(Class<T> clazz, Object bean) {
         LogStore logStore = targetContext.getTarget(LogStore.class);
         if(null == logStore){
             logStore = DefaultLogStore.getInstance();
