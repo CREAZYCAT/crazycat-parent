@@ -1,11 +1,8 @@
 package top.crazycat.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import top.crazycat.common.util.ReflectUtil;
-import top.crazycat.service.ProxyTest;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +15,7 @@ import top.crazycat.service.ProxyTest;
 public class Application {
     public static void main(String[] args) {
         ConfigurableApplicationContext app =SpringApplication.run(Application.class, args);
-        ProxyTest t = app.getBean(ProxyTest.class);
-        t.test();
+//        ProxyTest t = app.getBean(ProxyTest.class);
+//        t.test();
     }
 }

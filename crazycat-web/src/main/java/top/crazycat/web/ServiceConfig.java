@@ -41,11 +41,10 @@ public class ServiceConfig {
 
     @Bean
     public ProxyManager proxyManager(ProxyFactory proxyFactory, TargetContext targetContext){
-        ProxyManager proxyManager = new SpringProxyManager();
-        proxyManager.setScanPackages("top.crazycat.service");
-        proxyManager.setProxyFactory(proxyFactory);
-        proxyManager.setTargetContext(targetContext);
-        return proxyManager;
+        return new SpringProxyManager()
+        .setScanPackages("top.crazycat.service")
+        .setProxyFactory(proxyFactory)
+        .setTargetContext(targetContext);
     }
 
 }

@@ -7,6 +7,10 @@ import top.crazycat.convert.Converter;
 import top.crazycat.convert.exception.ConvertException;
 import top.crazycat.convert.processor.ConvertProcessor;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -32,10 +36,10 @@ public class DefaultConvertManager implements ConvertManager {
     private String packagePath;
     private boolean hasFile = true;
 
-    public synchronized ConvertManager register(Class source, Class target,String datePattern) {
+    public synchronized ConvertManager register(Class source, Class target, String datePattern) {
         String cacheKey = getCacheKey(source, target);
         if (null == cache.get(cacheKey)) {
-            cache.putIfAbsent(cacheKey, initConvert(source, target,datePattern));
+            cache.putIfAbsent(cacheKey, initConvert(source, target, datePattern));
         }
         return this;
     }
@@ -48,7 +52,7 @@ public class DefaultConvertManager implements ConvertManager {
     public ConvertProcessor[] processors() {
         ConvertProcessor[] p = new ConvertProcessor[processorChain.size()];
         int i = 0;
-        for(ConvertProcessor s:processorChain){
+        for (ConvertProcessor s : processorChain) {
             p[i] = s;
             i++;
         }
@@ -62,7 +66,7 @@ public class DefaultConvertManager implements ConvertManager {
     }
 
     public synchronized ConvertManager register(Class self) {
-        return register(self, self,null);
+        return register(self, self, null);
     }
 
     public void setPackagePath(String packagePath) {
@@ -96,7 +100,7 @@ public class DefaultConvertManager implements ConvertManager {
         try {
             Converter converter = getConverter(source.getClass(), target.getClass());
             assert converter != null;
-            converter.convert(source,target);
+            converter.convert(source, target);
         } catch (Exception e) {
             log.error("", e);
             throw new ConvertException(e);
@@ -107,7 +111,7 @@ public class DefaultConvertManager implements ConvertManager {
     public String[] scanPackages() {
         String[] p = new String[scanPackages.size()];
         int i = 0;
-        for(String s:scanPackages){
+        for (String s : scanPackages) {
             p[i] = s;
             i++;
         }
@@ -122,7 +126,7 @@ public class DefaultConvertManager implements ConvertManager {
 
     @Override
     public ConvertManager init() {
-        for(ConvertProcessor processor : processorChain){
+        for (ConvertProcessor processor : processorChain) {
             processor.execute(this);
         }
         return this;
@@ -131,13 +135,13 @@ public class DefaultConvertManager implements ConvertManager {
     @Override
     public void destroy() {
         cache.clear();
-        if(hasFile){
-            String path = ClassLoader.getSystemResource("").getPath()+(packagePath+"temp.target").replaceAll("\\.","/");
+        if (hasFile) {
+            String path = ClassLoader.getSystemResource("").getPath() + (packagePath + "temp.target").replaceAll("\\.", "/");
             File file = new File(path);
-            if(file.isDirectory()){
+            if (file.isDirectory()) {
                 File[] files = file.listFiles();
-                if(null != files && files.length>0){
-                    for(File f:files){
+                if (null != files && files.length > 0) {
+                    for (File f : files) {
                         f.deleteOnExit();
                     }
                 }
@@ -149,26 +153,28 @@ public class DefaultConvertManager implements ConvertManager {
     private Converter getConverter(Class source, Class target) {
         String cacheKey = getCacheKey(source, target);
         Converter c = cache.get(cacheKey);
-        if (null != c) {
-            return c;
+        if (null == c) {
+            synchronized (this) {
+                c = cache.get(cacheKey);
+                if (null == c) {
+                    c = initConvert(source, target, null);
+                    cache.putIfAbsent(cacheKey, c);
+                }
+            }
         }
-        synchronized (this) {
-            Converter converter = initConvert(source, target, null);
-            cache.putIfAbsent(cacheKey, converter);
-            return cache.get(cacheKey);
-        }
+        return c;
     }
 
     private Converter initConvert(Class source, Class target, String datePattern) {
         ClassPool pool = ClassPool.getDefault();
         try {
             CtClass superCt = pool.get(Converter.class.getName());
-            CtClass ctClass = pool.makeClass(packagePath + "temp.target.Converter$" + source.getSimpleName() + "_" + target.getSimpleName()+seq.incrementAndGet());
+            CtClass ctClass = pool.makeClass(packagePath + "temp.target.Converter$" + source.getSimpleName() + "_" + target.getSimpleName() + seq.incrementAndGet());
             ctClass.addInterface(superCt);
             CtMethod method2 = new CtMethod(
                     pool.get(void.class.getName()),
                     "convert",
-                    new CtClass[]{pool.get(Object.class.getName()),pool.get(Object.class.getName())},
+                    new CtClass[]{pool.get(Object.class.getName()), pool.get(Object.class.getName())},
                     ctClass);
             method2.setBody(generatorMethod2(source, target, datePattern));
             ctClass.addMethod(method2);
@@ -179,7 +185,7 @@ public class DefaultConvertManager implements ConvertManager {
                     ctClass);
             method.setBody(generatorMethod(source, target));
             ctClass.addMethod(method);
-            if(hasFile){
+            if (hasFile) {
                 ctClass.writeFile(ClassLoader.getSystemResource("").getPath());
             }
             return (Converter) ctClass.toClass().newInstance();
@@ -188,42 +194,42 @@ public class DefaultConvertManager implements ConvertManager {
         }
     }
 
-    private String generatorMethod2(Class source, Class target, String datePattern) {
+    private String generatorMethod2(Class source, Class target, String datePattern) throws IntrospectionException {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
         builder.append("try {");
         builder.append(source.getName()).append(" s = (").append(source.getName()).append(")$1;");
         builder.append(target.getName()).append(" t = (").append(target.getName()).append(")$2;");
-        Method[] sf = source.getMethods();
-        Method[] tf = target.getMethods();
-        Map<String, Method> tfMap = new HashMap<>(tf.length);
-        for (Method f : tf) {
-            tfMap.put(f.getName(), f);
-        }
-        if(null != datePattern && datePattern.length()>0){
+        if (null != datePattern && datePattern.length() > 0) {
             builder.append(SimpleDateFormat.class.getName()).append(" sdf = new ").
                     append(SimpleDateFormat.class.getName()).append("(\"").append(datePattern).append("\");");
         }
-        for (Method f : sf) {
-            String name = f.getName();
-            if(f.getParameterTypes().length > 0){
+        BeanInfo sourceInfo = Introspector.getBeanInfo(source);
+        BeanInfo targetInfo = Introspector.getBeanInfo(target);
+        Map<String, PropertyDescriptor> descriptorMap = new HashMap<>();
+        for (PropertyDescriptor propertyDescriptor : targetInfo.getPropertyDescriptors()) {
+            descriptorMap.put(propertyDescriptor.getName(), propertyDescriptor);
+        }
+        for (PropertyDescriptor propertyDescriptor : sourceInfo.getPropertyDescriptors()) {
+            String name = propertyDescriptor.getName();
+            PropertyDescriptor targetDescriptor = descriptorMap.get(name);
+            if (null == targetDescriptor) {
                 continue;
             }
-            if (name.startsWith("get")) {
-                String tm = name.replaceFirst("get", "set");
-                Method targetDeclaredMethod = tfMap.get(tm);
-                if (null != targetDeclaredMethod) {
-                    Class<?>[] parameterTypes = targetDeclaredMethod.getParameterTypes();
-                    if(parameterTypes.length == 1){
-                        if (parameterTypes[0].equals(f.getReturnType())){
-                            builder.append("t.").append(tm).append("(s.").append(name).append("());");
-                        }else if(null != datePattern && datePattern.length()>0){
-                            if(String.class.equals(parameterTypes[0]) && Date.class.equals(f.getReturnType())){
-                                builder.append("t.").append(tm).append("(").append("sdf.format(").append("s.").append(name).append("()));");
-                            }else if(String.class.equals(f.getReturnType()) && Date.class.equals(parameterTypes[0])){
-                                builder.append("t.").append(tm).append("(").append("sdf.parse(").append("s.").append(name).append("()));");
-                            }
-                        }
+            Method readMethod = propertyDescriptor.getReadMethod();
+            Method writeMethod = targetDescriptor.getWriteMethod();
+            if(null == readMethod || null == writeMethod){
+                continue;
+            }
+            Class<?>[] parameterTypes = writeMethod.getParameterTypes();
+            if (parameterTypes.length == 1) {
+                if (parameterTypes[0].equals(readMethod.getReturnType())) {
+                    builder.append("t.").append(writeMethod.getName()).append("(s.").append(readMethod.getName()).append("());");
+                } else if (null != datePattern && datePattern.length() > 0) {
+                    if (String.class.equals(parameterTypes[0]) && Date.class.equals(readMethod.getReturnType())) {
+                        builder.append("t.").append(writeMethod.getName()).append("(").append("sdf.format(").append("s.").append(readMethod.getName()).append("()));");
+                    } else if (String.class.equals(readMethod.getReturnType()) && Date.class.equals(parameterTypes[0])) {
+                        builder.append("t.").append(writeMethod.getName()).append("(").append("sdf.parse(").append("s.").append(readMethod.getName()).append("()));");
                     }
                 }
             }

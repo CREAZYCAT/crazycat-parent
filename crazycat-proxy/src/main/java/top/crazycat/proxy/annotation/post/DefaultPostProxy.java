@@ -2,7 +2,7 @@ package top.crazycat.proxy.annotation.post;
 
 import lombok.extern.slf4j.Slf4j;
 import top.crazycat.common.util.ListUtil;
-import top.crazycat.common.util.ReflectUtil;
+import top.crazycat.common.util.reflect.ReflectUtil;
 import top.crazycat.proxy.ProxyFactory;
 import top.crazycat.proxy.ProxyManager;
 import top.crazycat.proxy.annotation.Proxy;

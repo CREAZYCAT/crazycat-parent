@@ -1,4 +1,4 @@
-package top.crazycat.common.util;
+package top.crazycat.common.util.reflect;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,11 @@ import java.util.jar.JarFile;
 public class ReflectUtil {
     private static final Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
 
+    /**
+     * 从包package中获取所有的Class
+     * @param pack
+     * @return
+     */
     public static Set<Class<?>> getClasses(String pack) {
         Set<Class<?>> classes = new LinkedHashSet<>();
         String packageDirName = pack.replace('.', '/');
@@ -100,8 +105,16 @@ public class ReflectUtil {
     }
 
 
+    /**
+     * 从类中获取所有的字段
+     * @param o
+     * @return
+     */
     public static Field[] getAllFields(Object o){
-        Class c= o.getClass();
+        return getAllFields(o.getClass());
+    }
+
+    public static Field[] getAllFields(Class c){
         List<Field> fieldList = new ArrayList<>();
         while (c!= null){
             fieldList.addAll(new ArrayList<>(Arrays.asList(c.getDeclaredFields())));

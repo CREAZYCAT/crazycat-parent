@@ -6,10 +6,9 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import top.crazycat.convert.ConvertManager;
 import top.crazycat.convert.impl.DefaultConvertManager;
 import top.crazycat.convert.processor.RegisterProcessor;
-import top.crazycat.convert.test.entity.Demo2Entity;
 import top.crazycat.convert.test.entity.Demo3Entity;
 import top.crazycat.convert.test.entity.DemoEntity;
-import top.crazycat.common.util.ReflectUtil;
+import top.crazycat.common.util.reflect.ReflectUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -42,7 +41,7 @@ public class ConvertTest {
         System.out.println(System.currentTimeMillis()-start);
         System.out.println(manage.convert(entity, Demo3Entity.class));
         System.out.println(System.currentTimeMillis()-start);
-        manage.destroy();
+//        manage.destroy();
     }
 
     @Test
