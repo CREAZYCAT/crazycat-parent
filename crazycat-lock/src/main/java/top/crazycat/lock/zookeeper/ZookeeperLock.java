@@ -33,6 +33,10 @@ public class ZookeeperLock implements Lock {
         client.start();
     }
 
+    public void destory(){
+        client.close();
+    }
+
     @Override
     public boolean lock(String s, Long aLong) {
         try {
@@ -47,10 +51,10 @@ public class ZookeeperLock implements Lock {
             }
             if(-1L == aLong){
                 mutex.acquire();
-                lockData.lockCount++;
             }else {
                 mutex.acquire(aLong,TimeUnit.MILLISECONDS);
             }
+            lockData.lockCount++;
             logger.info("zk lock success by path:{}",s);
             return true;
         } catch (Exception e) {

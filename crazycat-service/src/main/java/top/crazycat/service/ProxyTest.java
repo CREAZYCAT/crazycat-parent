@@ -17,10 +17,13 @@ import top.crazycat.proxy.annotation.Proxy;
 public class ProxyTest {
 
     @Proxy
-    @Autowired
     private DemoService demoService;
+
+    @Proxy
+    private CglibProxyTest cglibProxyTest;
 
     public void test(){
         demoService.request(new DemoEntity());
+        cglibProxyTest.hello("ccc");
     }
 }

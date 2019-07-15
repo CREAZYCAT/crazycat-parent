@@ -1,9 +1,11 @@
 package top.crazycat.proxy;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.cglib.proxy.Enhancer;
 import top.crazycat.proxy.context.TargetContext;
 import top.crazycat.proxy.enums.ProxyType;
 import top.crazycat.proxy.handler.LogProxyHandler;
+import top.crazycat.proxy.interceptor.LogProxyInterceptor;
 import top.crazycat.proxy.logstore.DefaultLogStore;
 import top.crazycat.proxy.logstore.LogStore;
 
@@ -56,9 +58,11 @@ public class LogProxyFactory implements ProxyFactory {
                     new Class[]{clazz},
                     new LogProxyHandler(clazz,bean,logStore));
         }else {
-
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(clazz);
+            enhancer.setCallback(new LogProxyInterceptor(logStore));
+            return (T) enhancer.create();
         }
-        return null;
     }
 
 

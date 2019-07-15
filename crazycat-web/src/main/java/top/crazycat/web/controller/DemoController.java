@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import top.crazycat.api.DemoService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,17 +27,13 @@ public class DemoController {
     private DemoService demoService;
 
     @RequestMapping
-    public void index(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        request.setCharacterEncoding("GBK");
-//        demoService.request(new DemoEntity());
-        response.addHeader("Content-Type","text/html;charset=GBK");
-        String a = request.getParameter("a");
-        System.out.println(a);
-        response.getWriter().write("hello world 你好呀"+ a);
-//        return "hello world 你好";
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ModelAndView index = new ModelAndView("index");
+        index.addObject("a","a_a");
+        return index;
     }
 
-    @RequestMapping("error")
+    @RequestMapping("er")
     public void error(){
         throw new RuntimeException("诶，好像出错了");
     }
