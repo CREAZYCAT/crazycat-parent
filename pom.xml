@@ -16,6 +16,7 @@
         <module>crazycat-proxy</module>
         <module>crazycat-lock</module>
         <module>crazycat-cache</module>
+        <module>crazycat-leetcode</module>
     </modules>
     <packaging>pom</packaging>
 
