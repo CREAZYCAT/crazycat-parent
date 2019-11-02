@@ -1,12 +1,13 @@
 package top.crazycat.proxy.spring;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import top.crazycat.proxy.ProxyFactory;
 import top.crazycat.proxy.ProxyManager;
 import top.crazycat.proxy.annotation.post.DefaultPostProxy;
 import top.crazycat.proxy.context.TargetContext;
 import top.crazycat.proxy.enums.ProxyType;
+
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -17,7 +18,7 @@ import java.util.*;
  * description:
  */
 @Slf4j
-public class SpringProxyManager implements InitializingBean,ProxyManager {
+public class SpringProxyManager implements ProxyManager {
 
     private final List<String> scanPackages = new ArrayList<>();
     private final Map<ProxyType,ProxyFactory> factoryMap = new HashMap<>();
@@ -27,13 +28,7 @@ public class SpringProxyManager implements InitializingBean,ProxyManager {
 
     @Override
     public String[] scanPackages() {
-        String[] p = new String[scanPackages.size()];
-        int i = 0;
-        for(String s:scanPackages){
-            p[i] = s;
-            i++;
-        }
-        return p;
+        return scanPackages.toArray(new String[0]);
     }
 
     @Override
@@ -62,17 +57,13 @@ public class SpringProxyManager implements InitializingBean,ProxyManager {
         return factoryMap.get(proxyType);
     }
 
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        init();
-    }
-
+    @PostConstruct
     public ProxyManager init() {
         for (Map.Entry<ProxyType, ProxyFactory> factoryEntry : factoryMap.entrySet()) {
             factoryEntry.getValue().setTargetContext(targetContext);
         }
         DefaultPostProxy.getInstance().post(this);
+        log.info("init spring proxy manager successfully");
         return this;
     }
 
