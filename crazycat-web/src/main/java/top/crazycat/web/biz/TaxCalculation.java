@@ -2,9 +2,12 @@ package top.crazycat.web.biz;
 
 public class TaxCalculation {
     public static void main(String[] args) {
-        double salary_month = 21000;
-        double salary_wxyj = 2205+1470;
-        double salary_zxkc = 2000;
+        double salary_month = 18500;//税前月薪
+        double salary_wxyj = salary_month*0.08+//社保
+                salary_month*0.02+//医保
+                salary_month*0.005+//失业
+                salary_month*0.07;//公积金
+        double salary_zxkc = 0;//专项扣除
         cal(salary_month, salary_wxyj, salary_zxkc);
 
     }
