@@ -3,6 +3,7 @@ package top.crazycat.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import top.crazycat.service.ProxyTest;
 
 /**
@@ -12,6 +13,7 @@ import top.crazycat.service.ProxyTest;
  * @date: 2019/1/16
  * description:main
  */
+@ComponentScan("com.gwiip")
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
