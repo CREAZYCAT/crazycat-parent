@@ -2,7 +2,7 @@ package top.crazycat.web.biz;
 
 public class TaxCalculation {
     public static void main(String[] args) {
-        double salary_month = 18500;//税前月薪
+        double salary_month = 17400;//税前月薪
         double salary_wxyj = salary_month*0.08+//社保
                 salary_month*0.02+//医保
                 salary_month*0.005+//失业
